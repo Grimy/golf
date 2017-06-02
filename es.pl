@@ -33,24 +33,11 @@ my %chars = (
 	'J' => '<>es^',
 );
 
-my @codes = ();
 my $line = $_;
 
 my $l, my $r;
-for (reverse /./g) {
-	die ord unless $chars{$_};
-	$_ = $chars{$_};
-	$_ .= '^^' while y///c < length($codes[-1]);
-	push @codes, $_;
-	$chars{'\\'} = '><^' if $_ eq '<>^';
-}
 
 my @l = ();
-
-for (reverse @codes) {
-	my @c = /./g;
-	$_[$_] .= $c[$_] for 0..$#c;
-}
 
 @_ = map "<$_>", @_;
 
@@ -65,4 +52,4 @@ print eval eval eval eval "@_";
 # 0: < > < > < < < > > < < > < >
 # 1:   <               >
 __DATA__
-s<\H*>s^^^<<s^^^<<s^^^<<s^^^<<s^^^<<s^^^^s^^^<<s>><<><<s>>><<s>>>^s>>><<s>>><<s>>>^s>>><<s>>>e^s<^>;v;;\e^<sHebMM>
+s^^^<<s^^^<<s^^^<<s^^^<<s^^^<<s^^^^s^^^<<s>><<><<s>>><<s>>>^s>>><<s>>><<s>>>^s>>><<s>>>
