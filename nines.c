@@ -5,10 +5,10 @@
 enum { INVALID, DIV, MINUS, XOR, LSH, RSH, MULT };
 typedef enum { false, true } bool;
 
-static char chars[8] = "09/-^<>*";
-static char code[16] = { 0, 0, 0, 0, 0 };
+static char chars[8] = "09/-";
+static char code[32] = { 0, 0, 0, 0, 0 };
 static char found[128];
-static long stack[16];
+static long stack[32];
 static char *p;
 
 static long parse_num()
@@ -116,7 +116,7 @@ static long eval()
 int main(void)
 {
 	for (;;) {
-		for (p = code; *p == 7; ++p)
+		for (p = code; *p == 3; ++p)
 			*p = 1;
 		++*p;
 		long result = eval();
