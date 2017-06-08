@@ -5,29 +5,18 @@
 			<tile x="0" y="0" type="0" zone="6" torch="0" cracked="0" />
 			<tile x="1" y="0" type="0" zone="6" torch="0" cracked="0" />
 			<tile x="2" y="0" type="0" zone="6" torch="0" cracked="0" />
-			<tile x="3" y="0" type="0" zone="6" torch="0" cracked="0" />
-			<tile x="4" y="0" type="0" zone="6" torch="0" cracked="0" />
-			<tile x="5" y="0" type="0" zone="6" torch="0" cracked="0" />
 			<tile x="0" y="1" type="0" zone="6" torch="0" cracked="0" />
 			<tile x="1" y="1" type="20" zone="6" torch="0" cracked="0" />
 			<tile x="2" y="1" type="118" zone="6" torch="0" cracked="0" />
-			<tile x="3" y="1" type="0" zone="6" torch="0" cracked="0" />
-			<tile x="4" y="1" type="20" zone="6" torch="0" cracked="0" />
-			<tile x="5" y="1" type="118" zone="6" torch="0" cracked="0" />
 			<tile x="0" y="2" type="103" zone="6" torch="0" cracked="0" />
 			<tile x="1" y="2" type="118" zone="6" torch="0" cracked="0" />
 			<tile x="2" y="2" type="118" zone="6" torch="0" cracked="0" />
-			<tile x="3" y="2" type="103" zone="6" torch="0" cracked="0" />
-			<tile x="4" y="2" type="118" zone="6" torch="0" cracked="0" />
-			<tile x="5" y="2" type="118" zone="6" torch="0" cracked="0" />
 		</tiles>
 		<traps>
 			<trap x="2" y="1" type="1" subtype="5" />
-			<trap x="5" y="1" type="1" subtype="5" />
 		</traps>
 		<enemies>
 			<enemy x="1" y="1" type="711" beatDelay="0" lord="0" />
-			<enemy x="4" y="1" type="711" beatDelay="0" lord="0" />
 		</enemies>
 		<items>
 			<item x="0" y="0" type="misc_map" bloodCost="0" saleCost="0" singleChoice="0" />
