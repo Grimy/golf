@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<dungeon character="0" name="ORAND" numLevels="1">
+	<level bossNum="-1" music="0" num="1">
+		<tiles>
+			<tile x="0" y="0" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="1" y="0" type="20" zone="6" torch="0" cracked="0" />
+			<tile x="2" y="0" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="3" y="0" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="4" y="0" type="20" zone="6" torch="0" cracked="0" />
+			<tile x="5" y="0" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="0" y="1" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="1" y="1" type="20" zone="6" torch="0" cracked="0" />
+			<tile x="2" y="1" type="20" zone="6" torch="0" cracked="0" />
+			<tile x="3" y="1" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="4" y="1" type="20" zone="6" torch="0" cracked="0" />
+			<tile x="5" y="1" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="0" y="2" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="1" y="2" type="20" zone="6" torch="0" cracked="0" />
+			<tile x="2" y="2" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="3" y="2" type="0" zone="6" torch="0" cracked="0" />
+			<tile x="4" y="2" type="20" zone="6" torch="0" cracked="0" />
+			<tile x="5" y="2" type="0" zone="6" torch="0" cracked="0" />
+		</tiles>
+		<traps>
+			<trap x="4" y="1" type="1" subtype="1" />
+			<trap x="3" y="1" type="1" subtype="1" />
+			<trap x="2" y="1" type="1" subtype="1" />
+			<trap x="2" y="2" type="1" subtype="0" />
+			<trap x="3" y="2" type="1" subtype="0" />
+		</traps>
+		<enemies />
+		<items />
+		<chests />
+		<crates />
+		<shrines />
+	</level>
+</dungeon>
