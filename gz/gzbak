@@ -1,0 +1,1 @@
+$_=pack+u78,'÷Qa{¤º[utA›ßRøä­„lÂËóÍ"ño[ä·\zé­éÔ[ß¢ø4Ò5ã¹=Bså¾ãSeÔÔïÃ´V8äX3sysûœ×õÝåÍ2å/+¿·H#sMç¾}|^¹ÏLß¼LÇÛË/¡STa†ü›ðwtVxiéÞZäeßÝÒ.SØ<¥ß¬Ò.SQÏ¡„¸wò÷ÇëŽé-~H-åÞ{”Ô½½®oß/ˆ’É<ŽEá‚\Mþ{ÃÝ7ç¼=wžÍëÜù4Ñ†˜É†“1';s"[L-Z]"qw!$: $_ =2** map{ vec $- =chr: }K.. print/‰.*`‚/sg shift @_ } ;&_;sub' {![90-ord$&]"eg;eval

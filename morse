@@ -1,0 +1,7 @@
+#!/usr/bin/perl -p
+# s!.!sprintf("%b ",2+index"etianmsurwdkgohvfüläpjbxcyzqö",lc$&)=~s/.//r=~y/01/.-/r!ge
+# s!.!$_=sprintf"%b ",2+index"etianmsurwdkgohvfüläpjbxcyzqö",lc$&;s/.//;y/01/.-/r!ge
+# s!.!$_=sprintf"%b ",2+index etianmsurwdkgohvfXlXpjbxcyzq,lc$&;s/.//;y/01/.-/r!ge
+# s!.!sprintf" %b",2+index etianmsurwdkgohvfXlXpjbxcyzq,lc$&!ge;s/ ./ /g;y/01/.-/
+s!.!XetianmsurwdkgohvfXlXpjbxcyzq=~lc$&;sprintf" %b","@+"!ge;s/ ./ /g;y/01/.-/
+# print+sprintf("%b ","@+")=~s/.//r=~y/01/.-/rwhile-etianmsurwdkgohvfXlXpjbxcyzq=~lc getc

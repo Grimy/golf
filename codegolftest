@@ -1,0 +1,34 @@
+print '$<: ', "$<$/";
+print '$>: ', "$>$/";
+print '$(: ', "$($/";
+print '$): ', "$)$/";
+print '$[: ', "$[$/";
+print '$]: ', "$]$/";
+print '$$: ', $$, $/;
+print '$0: ', $0, $/;
+print '$^T: ', "$^T$/";
+print '$^X: ', "$^X$/";
+print '$^F: ', "$^F$/";
+print '$^O: ', "$^O$/";
+print '$^H: ', "$^H$/"; # Magic compile-time scope
+print '@INC: ', ''.@INC, " @INC$/";
+print '%INC: ', ''.%INC, %INC, $/;
+print '%SIG: ', ''.%SIG, %SIG, $/;
+print `echo echo`;
+__END__
+$<: 65534
+$>: 65534
+$(: 65534 5 0 65534
+$): 65534 5 0 65534
+$[: 0
+$]: 5.008008
+$*: 
+$^T: 1367951836
+$^X: /usr/local/bin/perl
+$^F: 2
+$^O: freebsd
+$^H: 256
+@INC: 7 /usr/local/lib/perl5/5.8.8/BSDPAN /usr/local/lib/perl5/site_perl/5.8.8/mach /usr/local/lib/perl5/site_perl/5.8.8 /usr/local/lib/perl5/site_perl /usr/local/lib/perl5/5.8.8/mach /usr/local/lib/perl5/5.8.8 .
+%INC: 6/16/usr/local/lib/perl5/5.8.8/mach/auto/POSIX/load_imports.al/usr/local/lib/perl5/5.8.8/mach/auto/POSIX/load_imports.alXSLoader.pm/usr/local/lib/perl5/5.8.8/mach/XSLoader.pm/usr/local/lib/perl5/5.8.8/mach/auto/POSIX/autosplit.ix/usr/local/lib/perl5/5.8.8/mach/auto/POSIX/autosplit.ixExporter.pm/usr/local/lib/perl5/5.8.8/Exporter.pmstrict.pm/usr/local/lib/perl5/5.8.8/strict.pmPOSIX.pm/usr/local/lib/perl5/5.8.8/mach/POSIX.pmsecure.pmsecure.pmAutoLoader.pm/usr/local/lib/perl5/5.8.8/AutoLoader.pm
+%SIG: 29/64ABRTTRAPEMTTTOUIOURGSTOPPROFTSTPSEGVPIPEUSR2INFOSYSVTALRMCONTTERMCHLDBUSHUPFPEXCPU__DIE__IOTTTINXFSZINTIGNOREKILLQUITIGNORETHR__WARN__WINCHUSR1ILLALRM
+

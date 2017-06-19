@@ -1,0 +1,62 @@
+#!perl
+
+# Read $_[0] bits from the input as a single binary number
+sub'_ { oct~reverse~eval'vec($v,$/++,1).'x"@_".b }
+
+# Read the next Huffman-encoded value from the input
+# This number is both returned and assigned to $_
+sub'h { @_ ? h(@{$_ = $_[_!0]}) : $_ }
+
+# Compute a value in the LZ77 tables (distance or length)
+# This value is both returned and assigned to $d
+sub'd {
+	$d = $- = 0;
+	$d -= 2**$-, $- = $_/2/@_ - 1 for +0..$_;
+	$d -= _$-
+}
+
+# Build a Huffman tree based on the list of depths
+sub't {
+	# Shift from @_ while iterating over @_, then assign to @_?!
+	# Understandably, this fails with Perl >= 5.16
+	# Incomprehensibly, it works for older Perls.
+	@_ = ( (grep { !--$_[$_] } 0..@_),
+	# The side-effects of the grep block are propagated to the
+	# deeper levels of recursion. The assignment to @_ isn't.
+		map { [shift, shift] } ++$t % 16 && &t)
+}
+
+# Enables 'slurp' mode and skip the header 
+$/ = 188;
+
+# h doesn't actually read anything here: it just sets $_
+$v = h <>;
+
+# Matches the uncompressed file, minus header and CRC footer
+# Doesn't match against the other files
+print /‰.*`‚/sg;
+
+# Build the first Huffman tree (used to encode the other two)
+@_[16..18, map { -$_&7, 8+$_ } 0..7] = map { _+3 } -3.._+4;
+&t; # 'Magic' function call: same as @_ = t(@_)
+
+# Read the list of depths shared by the other two Huffman trees
+@_ = map
+	&h < 16 ? $x = $_:
+	$_ & 7  ? (0)x(173%$_+_-65%$_):
+                  ($x) x (3 + _+2)
+, 0..140 & $$; # We're supposed to read this value in the header
+               # Meh. $$ is shorter and works almost half the time
+
+# @~ is the Huffman tree for repetition distances
+@~ = t+splice @_, 279;
+
+# @_ is the Huffman tree for the main alphabet
+# 0-255: literal bytes, 256: end, 257-285: repetition length
+&t; # Magic!
+
+	$Z++,print !/^2/ ?  # Characters 200-255 never appear in the tests
+	$o[@o] = chr:
+	# Tricky evaluation order!
+	map $o[@o] = $o[$d], d($_-=257, 8)..0, d~h@~
+while &h & 255

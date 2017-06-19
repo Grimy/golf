@@ -1,0 +1,8 @@
+use feature say;
+
+$_ = "012\xf0ABC\x0f\x00\x01\xff";
+say unpack "H*";    #  303132f04142430f0001ff
+for (my $i = length; $i--; vec($_, $i, 8) ^= ~0) {}
+say unpack "H*";    #  cfcecd0fbebdbcf0fffe00
+
+#my $arch = ~0 >> 57 & 96 ^ 32; # 32 or 64 bits?

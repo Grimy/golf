@@ -1,0 +1,38 @@
+#!perl
+
+$n = 1E7;
+@f = (0, 21, 40, 0, 69, 97);
+for $q (1..11) {
+    warn "$q$/";
+    @s = ();
+
+    for (1..$n) {
+        $Q[$_]=[0,(1)x8] for 1..8;
+        for (1..$q) {
+            $x = 1 + int rand 8;
+            $y = 1 + int rand 8;
+            redo if !$Q[$y][$x];
+            $Q[$y][$x] = 0;
+        }
+
+        $s = 0;
+        for $x (1..8) {
+            for $y (1..8) {
+                next if $Q[$y][$x];
+                for ([-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]) {
+                    ($nx, $ny) = ($x, $y);
+                    $s++ while $Q[$ny+=$$_[0]][$nx+=$$_[1]];
+                }
+            }
+        }
+        $mode = $s if ++$s[$s] > $s[$mode];
+    }
+
+    $mode = $f[$q] if ($f[$q]);
+    warn "$mode : $s[$mode]$/";
+    $p += $s[$mode];
+    $vec .= chr $mode;
+}
+
+print q[$/=Q;print+vec'(:], $vec, q[',%(=<>,8];
+warn $/, ($p / 11 / $n) ** -3;

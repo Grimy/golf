@@ -1,0 +1,11 @@
+use Golf::Utils;
+use feature say;
+
+$_ = 'eval lc pack u72,' . quote compress
+uc q(ap$c[$_*=.52,5.5-4.7*cos][8+7.4*sin]=($`%12^$_?o:x)&($'/5^$_?o:v125),0..s//<>/e./:/;print+qq%@$_for@c#);
+say;
+say length;
+eval;
+s/eval/print/;
+eval;
+

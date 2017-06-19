@@ -1,0 +1,23 @@
+#!perl
+# 100
+# print q[1while$_.=qw(-- --$ ++ ++$ ${ }while$ $$p=ord+getc||& print+chr$)[@-].'$p;',QBSD42CAe=~(o^getc);eval]
+
+# 100
+# printf '1while$_.=~(<{%s,%s,%s,%s,%s,%s,%s,%s}%s>)[@-],QBSD42CAe=~(o^getc);eval',
+# map ~y/!/ /r, qw(-- --$ ++ ++$ ${ }while$ $$p=ord!getc||& print!chr$ $p;)
+
+# 101
+# printf q[$p-=$'=~/\w/,$_.=~"$`%s"while'eQ%sB%sS%sD%s4%s2%sC%sA%se'=~(o^getc);eval],
+# map ~y/!/ /r, qw($p; -- --$ ++ ++$ ${ }while$ $$p=ord!getc||& print!chr$)
+
+# 99
+# printf q[--$p,$_.=~"$&%s"while'Q%sB%sS%sD%s4%s2%sC%sA%se'=~('o\K\W*'^getc);eval],
+# map ~y/!/ /r, qw($p; -- --$ ++ ++$ ${ }while$ $$p=ord!getc||& print!chr$)
+
+# 98
+# printf '9while$_.=~(<{{%s,%s}{,%s},%s,%s,%s,%s}%s>)[@-],QBSD42CAe=~(o^getc);eval',
+# map ~y/!/ /r, qw(-- ++ $ ${ }while$ $$p=ord!getc||& print!chr$ $p;)
+
+# 98
+printf '1while$_.=~(<{%s,%s,%s,%s,%s,%s}{,%s}%s>)[@-],QBSDQ4Q2QCQAe=~(o^getc);eval',
+map ~y/!/ /r, qw(-- ++ ${ }while $$p=ord!getc;7% print!chr $ $p;)

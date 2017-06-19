@@ -1,0 +1,66 @@
+use v5.16;
+
+my $code;
+my %r;
+
+sub match {
+	map {
+		$a += /\[/ ? 1 : -1;
+		next if $a < 0;
+	} /./g
+}
+
+sub chance {
+	my %o = map {
+		$_ => $r{eval($_[0])} =~ y/[]//cdr;
+	} 'a'..'z', '!';
+	
+	my @words = map {
+		s/./$o{$&}/gr
+	} qw(
+		apple banana carrot dinner elephant fluffle garage hippo
+		igloo january kettle locusts mannequin november optimus
+		pneumatic quine roasts spuds terrible unique venom walrus
+		xylophone yellow zebra
+	);
+	my @word2 = map $o{'!'} . $_, @words;
+
+	my $ok;
+	for (@word2) { local $a =  0; match;
+	for (@words) { local $a = $a; match;
+	for (@words) { local $a = $a; match;
+	for (@words) { local $a = $a; match;
+	for (@words) { local $a = $a; match;
+		$ok += !$a
+	}}}}}
+	my $ok1 = grep { eval; !$@ } @word2;
+	say $ok && $ok1 ? 26**7 / $ok / $ok1 / $ok1 : 'Impossible!';
+}
+
+sub ev() {
+	no warnings;
+	my $r = eval $code;
+	goto fail if $r < -8 || $r > 8;
+	$r %= 8;
+	goto fail if $r{$r};
+	$r{$r} = $_;
+	$r{$_} = $r;
+}
+
+close STDIN;
+my @chr = ((0..9), qw[( ) * / - + % | ^ & ~]);
+for my $a (@chr){ print"$a\n";
+for my $b (@chr){ print"$b\n";
+for my $c (@chr){
+for my $d (@chr){
+for my $e (@chr){
+for my $f (@chr){
+for my $g (@chr){
+	%r = ();
+	$code = "$a$b$c$d$e$f$g".'ord';
+	$_='>'; ev&&next;
+	ev for qw([ ] < + - . ,);
+	print "$code ";
+	chance($code);
+	fail:
+}}}}}}}

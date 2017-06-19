@@ -1,0 +1,3 @@
+function check(){$('#submit-request').text().match(/Send/)?$('#response-as-code').text().match(/Overall, Version \d+ failed/)?setTimeout(send, 121000):alert("Game over!"):setTimeout(check, 1000)}
+function send(){$('#submit-request').click();check()}
+

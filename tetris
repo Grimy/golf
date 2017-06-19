@@ -1,0 +1,11 @@
+
+for my $v (0..6) {
+	for my $n (0..11) {
+		print $n if (1 << $n % 12) & 975 & 0xC2590EC / 8**$v
+	}
+	print $/;
+}
+__END__
+print "\e[2J\e[;20r";
+print $_.$/ for 0..19;
+print "\e[;16r\e[T\e[;20r"

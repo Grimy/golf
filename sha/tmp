@@ -1,0 +1,26 @@
+0 and chr <<1;
+'''#'
+1
+use strict;use warnings;
+sub perl{
+    map{m&${\uc(q,m,)}&&&($,.=$_,)=~s,[^A-z0-6],,xg}@_;($_=$,)
+    =~tr$A-Za-z0-9+,$ -_$;for(unpack("u",join('',map(chr(32+
+    length($_)*3/4).$_,m$(.{1,60})$gs)))){$.='$_'.'="';map
+    {$..="\\$_"}unpack('(a3)*',$_.'012');$..='"';eval(${\$.}),
+    s;\x50++\S{5}+;\u${\substr((caller(0e0))[0b11],-4)
+};;print}}${;}={<<'1<<1'=>1}
+#'''
+l=('137137151155160157162164137137''050047142141163145066064047051',
+   '161056142066064144145143157144''145050143051',
+   'MTEyMTY1MTYzMTY0MDQwMTQxMTU2MTU3MTY0'
+   'MTUwMTQ1MTYyMDQwMTIwMTcxMTY0MTUwMTU3'
+   'MTU2MDQwMTUwMTQxMTQzMTUzMTQ1MTYyMDU0'
+)
+def l1(l):[(yield'\\'+l[i:i+(2|1)])for i in xrange(0,len(l),(2|1))]
+i,I=lambda l:eval('"'+''.join(list(l1(l)))+'"'),lambda l:eval(i(l))
+c,q=l[0o0+-0o1],I(l[0o1&0o2]);print(i(I(l[-(0o3^0o1)],)))
+'''
+1<<1
+and 1;
+perl(split/\n/,(keys(${;}))[0])
+#'''

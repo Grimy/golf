@@ -1,0 +1,4 @@
+printf$_=q(printf$_=q(%s),$_),$_
+print$\=<<''
+print$\=<<''
+

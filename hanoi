@@ -1,0 +1,12 @@
+#($A, $B, $C) = eval<>;
+
+sub h{
+	my($f, $t, $n) = @_;
+	my $i="ABC"=~s/$f|$t//rg;
+	if ($n) {
+		h($f, $i, $n-1);
+		print "\n$n to $t";
+		h($i, $t, $n-1);
+	}
+}
+h("A", "C", 3);

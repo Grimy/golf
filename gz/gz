@@ -1,0 +1,169 @@
+#!/usr/bin/perl -s
+use feature say;
+use Golf::Utils;
+use List::Util qw(shuffle);
+use List::MoreUtils qw(zip);
+
+local $/;
+sub don't(&) { }
+$xor = 1;
+
+# Reverse c (use pop)
+
+########
+# INIT #
+########
+
+# Read the uncompressed code
+open IN, pop // 'a.pl';
+$_ = <IN>;
+
+%names = $xor ? (
+	lz   => 'V',
+	huff => 'Y',
+	bin  => 'Z',
+	tree => '_'
+) : (
+	lz   => 'A',
+	huff => 'B',
+	bin  => 'C',
+	tree => '_'
+);
+
+# Strip whitespace and comments
+s/\s|(?<!\$)#.*|use.*//g;
+$names = '(?:' . (join '|', keys %names) . ')';
+s/$names/$names{$&}/g;
+
+say length, " chars, packed into...";
+
+########
+# DAFT #
+########
+
+if ($find) {
+for(;;) {
+	$max = -2;
+	undef $best;
+
+	for $l (2..12) {
+		for $i (0..length() - $l) {
+			$sub = substr $_, $i, $l;
+
+			$n =()= "$_@rep" =~ /\Q$sub/g;
+			$score = $n * ($l-1) - (1 + length($sub));
+			if ($score > $max) {
+				$max = $score;
+				$best = $sub;
+			}
+		}
+	}
+	last unless defined $best;
+
+	say $best=~s/\pC/'{'.ord($&).'}'/reg, ": $max";
+	s/\Q$best/chr @rep/ge;# for $_, @rep;
+	push @rep, $best;
+}
+die;
+}
+
+@rep = qw#
+	map{  }0..  vec$:
+	shift  $_  }  {
+	@_  print/‰.*`‚/sg  chr:
+	$-  $;  ;&_;sub'
+    +=2**
+#;
+
+shuffle:
+{ @rep = shuffle(@rep); redo if $rep[5] ne '$_' or "@rep" =~ /}.*}0|{.*map{/ or grep { ($rep[$_] ^ chr($xor ? 79 ^ $_ : 90 - $_)) =~ /\s/ } 0..$#rep; }
+
+while (($i, $best) = each @rep) {
+	$l = length $best;
+	$chr = chr($xor ? 79 ^ $i : 90 - $i);
+	say "$chr $best: ", s/\Q$best/$chr/g;
+	$code{$best} = $chr;
+
+	die $i if $chr !~ /[A-Z]/;
+    $rep[$i] ^= $chr;
+}
+say "\n", 8*length("@rep") + 6*length, ' bits (', length, '+', length "@rep", ')';
+$sub = $code{";&_;sub'"} or die;
+
+########
+# RAND #
+########
+# Shuffle the order of function declarations
+
+$temp = join '', values %names;
+@subs = /$sub [$temp] $code{'{'} .*? ;;/gx;
+die @subs if @subs != 4;
+s//µ/g;
+@rest = split 'µ';
+map { s/;;$// } @subs;
+
+{
+	@subs = shuffle @subs;
+	redo if $subs[-1] =~ /^$sub(?:$names{tree}|$names{bin})/;
+	redo if $subs[-2] =~ /^$sub$names{bin}/;
+	$_ = join '', zip @rest, @subs;
+	redo if /$names{huff} $code{'{'} .* $names{huff} ;/x;
+	redo if /$names{huff} $code{'{'} .* $names{bin} $code{'{'}/x;
+	redo if /$names{lz} $code{'{'} .* $names{bin} $code{'{'}/x;
+
+	#TODO
+	#s/$sub \K $names{huff} $sub//x;
+	#$i = int rand 2;
+	#s/($sub [^$sub]*){$i} $sub \K/$names{huff}$sub/x;
+
+	redo if (substr $_, 103, 2)=~/ \+\+ | \*\* | \+\= | \d\d | \-\- | \.\. | $sub[BDE_] /x;
+	#redo unless
+	s/^.{103} [BDE_] \K \+//x;
+	say /^.{207} \K .{5}/xg;
+	redo unless /^.{207} (?: 2" | \[- | \{- | %$code{'$;'} )/xs
+		or s/^.{207} (?: \@\K\/ | \$\K; | .\K[A-O_0] )//xs;
+	#redo if y%%%c%4;
+}
+
+########
+# PACK #
+########
+pack: s/;;//g;
+
+$_ .= '#' if y&&&c&3;
+$_ = compress($_);
+say length . " bytes of packed data";
+
+# Embed
+$_ = "\$_=pack+u79," . quote($_) . ';'
+   . quote_regex('.', quote(@rep) . ($xor ? '[79^ord$&]^$&' : '[90-ord$&]')) . 'eg-'
+   . 'eval';
+
+say length, " chars!";
+
+########
+# TEST #
+########
+
+$time = time;
+open OUT, '>gzok';
+binmode OUT;
+print OUT;
+open OUT, '>gztest';
+binmode OUT;
+print OUT s/eval/print/r;
+$command = 'sudo perl5.16 -MGolf::Utils=';
+say `$command gztest`;
+#say ord `command gztest`;
+
+%pid = ('logo.png' => 132, 'rfc1951.txt' => 136, 'rfc1952.txt' => 140);
+for (keys %pid) {
+	print;
+	open IN, $_;
+	say ': ', (`$command$pid{$_} gzok < $_.gz` eq <IN>) ? 'OK!' : 'Fail';
+}
+y>>>c>308?
+printf "It needs to be about %.1f%% shorter.\n", (1-308/length)*100:
+say 'Bwahaha world record :D :D :D';
+say time-$time, " seconds.";
+

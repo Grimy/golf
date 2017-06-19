@@ -1,0 +1,98 @@
+<p><blockquote><i>
+Perfection is attained, not when no more can be added, but when no more can be removed.
+</i></blockquote></p>
+<p align="right"><small>— Antoine de Saint-Exupéry</small></p>
+
+<a href="http://codegolf.com/guns-and-zips">Code Golf's unzipping challenge</a> was a lot of fun. During my hectic adventures on this challenge, I unearthed a few tricks that I felt like were worth sharing. 
+
+<h3>A bit of history</h3>
+<p><blockquote><i>
+[Golf induces] the bizarre experience of finding yourself cursing and swearing at total strangers from all over the world for passing you on the leaderboard.
+</i></blockquote></p>
+<p align="right"><small>— eyepopslikeamosquito</small></p>
+<p>
+I first tried the Guns and Zips challenge 9 months ago. I came up with a 466-stroker (uncompressed). Since the program is used to uncompress the specification of the gzip format, it occured to me naturally that I could try and compress the program itself, adding another level of "meta". The compression I came up with used a combination of <code>pack</code> and <code>unpack</code> to strip the high bit of each byte (which is always 0 for ASCII characters). This produced a 447-stroker, snatching the first place for Perl from <b>0xF</b> (452). The first place overall was at the time owned by <b>flagitious</b>, with 389 bytes; this seemed far out of reach to me.
+</p>
+<p>
+Recently, I came back to this challenge. By refining both my uncompressed solution and my compression algorithm, I managed to take the first place on the leaderboard with a whopping 359-strokes. That's when I chanced upon <b>eyepopslikeamosquito</b>'s wonderful <a href="http://www.perlmonks.org/?node_id=995190">Compression in Golf</a> (which I recommend that you read, if you haven't heard of <code>pack u</code> compression before).
+</p>
+<p>
+Using <code>pack u</code>, I took my solution down to 335 characters. This was <i>64</i> fewer characters than the second shortest solution. I opened a well-earned Dr Pepper, convinced that no one would ever catch up on this.
+</p>
+<p>
+But <b>dmd</b> did. Yes, the very <b>dmd</b> who exposed the <a href="http://www.perlmonks.org/?node_id=1026287"><code>$<^C</code> trick</a>. One week ago, out of nowhere, he produced a 332-stroker. In the following days, we struggled ruthlessly. There was a lot of cursing and fist-shaking, at least on my side. My 330-stroker was quickly met by a 329; a 328 bytes solution had a better fate and led the scoreboard for almost two days, before being utterly crushed by <b>dmd<b>'s 326. To this day, my 323-stroker still leads the challenge, but I expect him to make a comeback at anytime.
+</p>
+
+<h3>Using a dictionnary</h3>
+<p>
+My shortest uncompressed solution is a 441-stroker. My final solution is 323 bytes long. That's a compression ration of .73. Since <code>pack u</code> alone only achieves a ratio of .75, plus some overhead, you may have guessed that I combined it with something else.
+</p>
+<p>
+One of the problems of <code>pack u</code> is that it won't generate characters in <code>[a-z{|}~]</code>. Lower case letters can easily be obtained by applying <code>lc</code> to the output of <code>pack u</code>, but my uncompressed solution used <i>lots</i> of curly braces, which was more of a conundrum.
+</p>
+<p>
+One way around this is to use <code>y/A-Z/a-x{}/</code>. While Perl 5.8 has a nice exploitable memory bug, it doesn't support the <code>/r</code> modifier for regexes, making this approach quite clumsy: you have to assign to <code>$_</code> first. I figured that I could take the chance to apply some character-saving transformations to <code>$_</code>. For example, <code>shift</code> was repeated three times in my code, so I could add <code>s/X/shift/g;</code>. This was promptly generalized to <code>s/[L-Z]/qw(list of common patterns in the uncompressed code)[90-ord$&]/g</code>. At this point, I actually no longer needed the transliteration: I could simply add those pack-hostile characters to the list.
+</p>
+<p>
+Here is my 323 bytes solution: </p>
+<code>$_=pack+u78,'compressed_string';s"[L-Z]"qw!map{ shift $: $_ { }K.. chr print/&#137;X.*`X&#130;/sg $- ;&_;sub' =2** @_ vec }![90-ord$&]"eg;eval</code>
+<p>
+Since all the keywords I use are replaced with characters in [L-Z], I don't need lowercase letters anymore. Subs are named using characters in [_A-K].
+</p>
+<p>
+You may have noticed the lack of control structures in this list. Turns out, when you have a one-character hammer, everything looks like a nail. Once a pattern is in the dictionnary, using it again has a net cost of one uncompressed character (or 6 bits, if you want to look at it this way). That's how I ended up replacing <i>all</i> control structures in my code with <code>map</code>. <code>for</code> and <code>grep</code> were no-brainers; <code>eval'code'x</code> required some silly contorsions; but <code>while</code> was the true challenge.
+</p>
+<p>
+Luckily for me, the only <code>while</code> I used was at the very end of the program, which meant that I could simply <code>die</code> instead of gracefully exiting from the loop. There you have it: the terminating condition of my solution is a division by zero. When the denominator is non-zero, the result of the division isn't wasted, and goes to a comparison. Since this happens inside an eval, it even leaves a clean STDERR! (Note that codegolf.com doesn't care what you write to STDERR, anyway).
+</p>
+<p>
+Control structures: check. Was there any other annoying keyword in my solution? <code>slice</code> ? Why would I need <code>slice</code>? <code>slice @_, 279</code> was replaced with <code>map { shift @_ } 0..278</code>, and later with <code>map { shift @_ } K..KC</code>. Although much longer, this saves about six bytes by removing the need to add <code>slice</code> to the dictionnary.
+</p>
+<p>
+As much as I tried, I couldn't get rid of <code>vec</code> and <code>chr</code>, which are both used only once. Any ideas?
+</p>
+<p>
+</p>
+
+<h3>Exploiting the memory bug</h3>
+<p><blockquote><i>
+Of course. The true&tested method of "Can't possibly work, let's try it anyway."
+</i></blockquote></p>
+<p>. He mentioned the possibility to exploit the Perl 5.8 memory bug, but did not delve into the gory details.
+</p>
+
+<p>
+Here's how it works. pack u
+</p>
+
+<h3>Recursion: see Recursion</h3>
+<p><blockquote><i>
+Functional approaches never win
+</i></blockquote></p>
+<p align="right"><small>— eyepopslikeamosquito</small></p>
+My solution proved this law wrong. It uses four subroutines, two of which are recursive. Of course, any enthusiast of "pure" functional programming would probably rip their eyes and/or my throat off if they stumbled upon it. Here
+
+<code>
+sub'_ {
+	@_ = ( (map { --$_[$_] ? %$ : [$_] } K..@_),
+		map { [shift, shift] } ++$: % 35 && &_)
+}
+</code>
+
+<p align="right"><small>
+-- Eugene van der Pijll during <a href="http://perlgolf.sourceforge.net/cgi-bin/PGAS/post_mortem.cgi?id=9">Infix to RPN game</a>
+</small></p>
+
+<p>I was quite disheartened that, of the four shortest solutions, only mine used Perl. I see it a as a symptom of the dwindling interest for Perl Golf. I hope that this meditation will encourage more people to try their hand at it.</p>
+
+<p>References:
+<ul>
+<li><a href="http://www.perlmonks.org/?node_id=995190">Compression in Golf: Part I</a></li>
+<li><a href="http://www.perlmonks.org/?node_id=997591">Compression in Golf: Part II</a></li>
+<li><a href="http://www.perlmonks.org/?node_id=http://www.perlmonks.org/?node_id=1000179">Compression in Golf: Part III</a></li>
+
+
+<p>Footnotes:
+<ol>
+<li><code>pack u</code> is semantically confusing: it's the only pack format where the "packed" string is actually longer than the "unpacked" string. To clear up any ambiguity, I refer to those strings as "uncompressed" and "compressed", respectively.</li>
+</ol></p>

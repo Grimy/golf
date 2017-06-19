@@ -1,0 +1,90 @@
+Subject: '2**P' gives incorrect warnings
+Message-Id: <5.16.3_20612_1370563284@Anachorete>
+Reply-To: victor@anachorete.(none)
+To: perlbug@perl.org
+
+
+This is a bug report for perl from victor@anachorete.(none),
+generated with the help of perlbug 1.39 running under perl 5.16.3.
+
+
+-----------------------------------------------------------------
+[Please describe your issue here]
+
+~$ perl -MO=Deparse -e '2**P'
+Operator or semicolon missing before *P at -e line 1.
+Ambiguous use of * resolved as operator * at -e line 1.
+2 ** 'P';
+-e syntax OK
+
+The warnings suggest that 2**P is parsed as 2 * *P, but it is actually parsed as 2 ** 'P', as is shown by the example.
+
+[Please do not change anything below this line]
+-----------------------------------------------------------------
+---
+Flags:
+    category=core
+    severity=low
+---
+This perlbug was built using Perl 5.10.1 - Mon Mar 18 18:32:43 UTC 2013
+It is being executed now by  Perl 5.16.3 - Wed May 22 00:37:21 CEST 2013.
+
+Site configuration information for perl 5.16.3:
+
+Configured by victor at Wed May 22 00:37:21 CEST 2013.
+
+Summary of my perl5 (revision 5 version 16 subversion 3) configuration:
+   
+  Platform:
+    osname=linux, osvers=2.6.32-24-generic, archname=x86_64-linux
+    uname='linux anachorete 2.6.32-24-generic #43-ubuntu smp thu sep 16 14:58:24 utc 2010 x86_64 gnulinux '
+    config_args=''
+    hint=recommended, useposix=true, d_sigaction=define
+    useithreads=undef, usemultiplicity=undef
+    useperlio=define, d_sfio=undef, uselargefiles=undef, usesocks=undef
+    use64bitint=define, use64bitall=define, uselongdouble=undef
+    usemymalloc=n, bincompat5005=undef
+  Compiler:
+    cc='gcc', ccflags ='-fno-strict-aliasing -pipe -fstack-protector -I/usr/local/include',
+    optimize='-O2',
+    cppflags='-fno-strict-aliasing -pipe -fstack-protector -I/usr/local/include'
+    ccversion='', gccversion='4.4.3', gccosandvers=''
+    intsize=4, longsize=8, ptrsize=8, doublesize=8, byteorder=12345678
+    d_longlong=define, longlongsize=8, d_longdbl=define, longdblsize=16
+    ivtype='long', ivsize=8, nvtype='double', nvsize=8, Off_t='off_t', lseeksize=8
+    alignbytes=8, prototype=define
+  Linker and Libraries:
+    ld='gcc', ldflags =' -fstack-protector'
+    libpth=/etc/perl /usr/local/lib/perl/5.10.1 /usr/local/share/perl/5.10.1 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.10 /usr/share/perl/5.10 /usr/local/lib/site_perl . /home/victor /usr/lib/perl/5.16.3 /usr/lib/x86_64-linux-gnu /lib64 /usr/lib64
+    libs=-lnsl -ldl -lm -lcrypt -lutil -lc
+    perllibs=-lnsl -ldl -lm -lcrypt -lutil -lc
+    libc=/lib/libc-2.11.1.so, so=so, useshrplib=false, libperl=libperl.a
+    gnulibc_version='2.11.1'
+  Dynamic Linking:
+    dlsrc=dl_dlopen.xs, dlext=so, d_dlsymun=undef, ccdlflags='-Wl,-E'
+    cccdlflags='-fPIC', lddlflags='-shared -O2 -fstack-protector'
+
+Locally applied patches:
+    
+
+---
+@INC for perl 5.16.3:
+    /usr/lib/perl5/site_perl/5.16.3/x86_64-linux
+    /usr/lib/perl5/site_perl/5.16.3
+    /usr/lib/perl5/5.16.3/x86_64-linux
+    /usr/lib/perl5/5.16.3
+    /usr/lib/perl5/site_perl
+    .
+
+---
+Environment for perl 5.16.3:
+    HOME=/home/victor
+    LANG=fr_FR@euro
+    LANGUAGE=fr_FR:en
+    LC_ALL=en_US.utf8
+    LC_MESSAGES=fr_FR.UTF-8
+    LD_LIBRARY_PATH (unset)
+    LOGDIR (unset)
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+    PERL_BADLANG (unset)
+    SHELL=/bin/bash

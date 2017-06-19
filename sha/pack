@@ -1,0 +1,38 @@
+#!perl -0
+
+use Golf::Utils;
+
+open my $in,  '<', 'sha';
+open my $out, '>', 'sha.pack';
+local $/;
+$_ = <$in>;
+
+s/\s|#.*//g;
+# s/cffe\w+|h\(\K\w+//g;
+for my $c (map chr, 33..96) {
+	# print $c, v10 if !/\Q$c/;
+}
+
+# s/\(__\&__/(__&/;
+s/__/o/g;
+s',@;=map{'l'g;
+substr($_, 312, 1) = '';
+y/a-~/A-Z#9:?/; # LQW
+
+$_ = compress("$_");
+
+$code = q($_=pack+u78,)
+      . quote($_)
+      . q(;y/A-Z#9:?/a-~/)
+      . q(;s'l',@;=map{'g)
+      . q(;eval)
+;
+
+eval $code;
+print v10;
+s/eval/print/ for $code;
+eval $code;
+s/print/eval/ for $code;
+print v10;
+s/\+u\d+/\$<^C/ for $code;
+print {$out} $code;

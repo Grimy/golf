@@ -1,0 +1,14 @@
+#!perl
+
+use Golf::Utils;
+
+open my $in,  '<', 'spirals';
+open my $out, '>', 'spirals.ok';
+local $/;
+
+$_ = <$in>;
+s/\s|#.*//g;
+s/\\x20/ /g;
+s/\\n/\n/g;
+print { $out } $_;
+print y///c;

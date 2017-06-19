@@ -1,0 +1,8 @@
+#!perl
+
+my ($n, $c) = split /,/, <>;
+my $result = 1;
+for (1..$c) {
+	$result *= ($n + 1 - $_) / $_;
+}
+print $result;

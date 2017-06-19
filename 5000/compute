@@ -1,0 +1,44 @@
+#!perl -l
+
+sub dice(_) {
+	my ($dice) = @_;
+	map {
+		my $i = $_;
+		join '', sort map { int($i / 6**$_) % 6 + 1 } 0..$dice-1
+	} 0..6**$dice-1;
+}
+
+sub score(_) {
+	my $s =
+	  1500 * s/123456//g
+	+ 1400 * s/111111//g
+	+ 1200 * s/666666//g
+	+ 1000 * s/(.)\1(.)\2(.)\3//g
+	+ 700  * s/111//g
+	+ 600  * s/666//g
+	+ 500  * s/555//g
+	+ 400  * s/444//g;
+	$s += 100  while (!$s || y///c < 4) && s/1//;
+	$s += 50   while (!$s || y///c < 3 + /55/) && s/5//;
+	$s += 200  while (!$s || y///c < 5) && s/222//g;
+	$s += 300  while (!$s || y///c < 5) && s/333//g;
+	$s, y///c || 6, $s + 100 * s/1//g + 300 * s/333//g + 200 * s/222//g + 50 * s/5//g, y///c || 6;
+}
+
+my @probas;
+local $" = ', ';
+
+for $i (1..6) {
+	for (dice $i) {
+		my ($mscore, $mdices, $score, $dice) = score;
+		$probas[$i - 1]{$dice - 1, $score / 50, $mdices - 1, $mscore / 50}++ if $score;
+	}
+}
+
+my $w = 1 + keys %{$probas[5]};
+print "static const roll rolls[6][$w] = {";
+for (@probas) {
+	my %h = %$_;
+	print "\t{", (join ', ', map "{@$_}", sort {$b->[0]<=>$a->[0]} map [$h{$_}, split $;], keys %h), "},";
+}
+print "};";

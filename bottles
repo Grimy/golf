@@ -1,0 +1,6 @@
+/s/ until@c=(@b=(++$n,bottle.$&,of,beer),on,the,wall),s/^/Take one down and pass it around, @c.
+
+@c, @b.
+/,/, 99.*
+
+/;print$'."Go to the store and buy some more$&"

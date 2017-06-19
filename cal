@@ -1,0 +1,34 @@
+#!perl
+$_=<>;
+@S=map [ map { $_ > 0 ? sprintf "%2d", $_ : $"x2 } ($m%=@d=SuMoTuWeThFrSa=~/../g)-5..$_+28,(0)x14,$m-=$_ ],
+    3,!/900/>$_%4,(3,2,3,2,3)x2,
+    $m=-$_*.99-(--$_>>2)+/^1/;
+
+# $a = 'January6February15March15April7May18June19July8August17September14October6November15December14';
+
+print$"x30,$_+1,$/x2,map{
+    @s=splice@S,0,3;
+    map({$a=~/\d+/;$"x$&.$`}0..2),"\n@d  @d  @d\n",
+    grep{
+        $_ = join $"x2, map { join $", splice@$_, 0, 7 } @s;
+        s/ *$/\n/
+    } 0..5
+}
+
+__END__
+
+#!perl -nl
+print$"x30,$_,$/;
+$,=$";
+@S=map [ map { $_ > 0 ? sprintf "%2d", $_ : $"x2 } ($m%=@d=SuMoTuWeThFrSa=~/../g)-5..$_,(0)x9,$m-=$_ ],
+    31,$_%4?28:29-/[^0]00$/,(31,30,31,30,31)x2,
+    $m=-$_*.99-(--$_>>2)+/^1/;
+for ([January,February,March],[April,May,June],[July,August,September],[October,November,December]) {
+    printf"%-22s%-22s%s\n@d  @d  @d\n", map $"x(10-y///c/2).$_,@$_;
+    @s=splice@S,0,3;
+    for (0..5) {
+        $_ = join $"x2, map { join $", splice@$_, 0, 7 } @s;
+        s/ *$//;
+        print;
+    }
+}

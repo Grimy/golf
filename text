@@ -1,0 +1,106 @@
+## Perl, 5 characters
+
+    <>^es
+
+As with other scripting languages, the idea is to `eval` arbitrary strings.
+However, our character set doesn’t include quotes or concatenation operators,
+so constructing arbitrary strings is gonna be way more complex. Note that
+`eval^"` would be much simpler to deal with, but has one more character.
+
+Our main tool is `s<><CODE>ee`, which runs `CODE`, then evals its result, then
+prepends the result of that to `$_` (Perl’s default variable). More `e` can be
+added, to add more layers of evaluation. Note that we can’t access the final
+result, since we can’t spell `$_`.
+
+We get arbitrary numbers by combining `s>>>` (does nothing, returns 1),
+`<<` and `^`. For example, 5 is `s>>><<s>>><<s>>>^s>>>`.
+
+We get strings using `<>`, which is the glob operator except when it isn’t.
+The first character can’t be `<` (otherwise it looks like the `<<` operator),
+the angle brackets need to be balanced, and there must be at least one
+non-letter character (otherwise it’s interpreted as the readline operator).
+
+By xoring those strings together, we can get the following characters:
+```^@^B^E^G^Q^S^T^V(*-/9;<>HJMOY[`\^begqstv``` (the first eight of those are
+control chars). This is our secondary charset.
+
+It’s pretty horrible. The unmatched `(` and `[` are taunting us; the only
+function that can be spelled with those letters is `eq`; and the only new
+operators are `*-/\`, when what we really wanted was `.` (to do string
+concatenation). The most interesting part is the `v`, which lets use v-string
+syntax: `v99` is the character with ASCII code 99 (this feature was originally
+designed to compare version numbers: `v5.10 gt v5.8`, while `"v5.10" lt "v5.8"`
+and `5.10 < 5.8`).
+
+Due to the restrictions on the glob operator, we cannot create arbitrary
+strings with the secondary charset. Our strings cannot start with a character
+that has `<` or `>` in its xor-decomposition; this only leaves `^@^V-;H^es`.
+For similar reasons, strings cannot have one of ```^B^E^S^T>M[`(\gq/9vJ``` as the
+second character, cannot end with one of `^B^G^Q^T<OYb*\gq/9tJ`, and must have
+as many characters from `^E^S>M[`(v` as from `^G^Q<OYb*t`.
+
+We can get around that by adding ignorable garbage around our strings. For
+example, suppose we want to get `v99`. One way to get `v99` is `"><<" ^ "e>>" ^
+"see" ^ "^^^"`, but we can’t represent those strings due to the constraints on
+`<>`. So instead, we use:
+
+    <^<<^>><>>^<^^^^^<>>^<^^^^^^e>^<^^^^^^^>^<^^^^^e>^<^^^^e^>^<e^^es>^<^ee^^>^<^<^^^^^>>^<^<>^^^^>^<^^^^^^^e>^<^^^^^^^^>
+
+The above yields `Y9;v99;`, which, when eval-ed, yields the same result as a
+plain `v99`.
+
+Notice that this expression is extremely long. This is because half of the
+secondary charset can only be produced by xoring an even number of base
+characters, and the other half can only be produced by an odd number, forcing
+us to add another glob whenever changing between them.
+
+Right now, `v99` is pretty much the only v-string we can spell, since we don’t
+have a way to do concatenation yet. But we can get a few other strings: `*b`
+yields `*main::b`, `\9` gives `SCALAR(0xdeadbeef)`, `\\9` is `REF(0xdeadbeef)`
+and `\*b` is `GLOB(0xdeadbeef)` (the actual hex numbers vary from run to run,
+of course). Xoring those strings with characters from the secondary charset
+opens some new possibilities.
+
+The one we’ll use is `\9^<sHe^S[>`. This evaluates to " ^K$_R(0xdeadbeef)".
+^K is a vertical tab, which is ignored as whitespace. ^Z is treated as EOF,
+causing the interpreter to ignore everything that comes after. Thus, evaling
+this expression a second time returns the value of `$_`, and evaling it a third
+time evals $_.
+
+This lets us use a limited form of concatenation: we can repeatedly prepend
+things to `$_` with `s<><THINGS>e`, and then use ```s<><*b^<^B[MMH^V^SY>>eee```
+to eval `$_`.
+
+Using digits, `v`, and concatenation, we can generate arbitrary characters
+(vXXX yields the character with ASCII code XXX). And we can concatenate those,
+so we can generate arbitrary strings. So it looks like we can do anything.
+
+However, we’re not there yet. Any `<>` string longer than 256 characters 
+will crash Perl with `Excessively long <> operator`. Thus, we can’t simply
+write an entire program in the secondary charset, and then convert it to
+`<>^es` at the end, since that would lead to extremely long `<>` operators.
+
+Instead, we need to write the main logic using only `<>^es`, and only use
+the secondary charset for short segments. To convert an arbitrary program
+(for example, `say$$`), we’ll use something along those lines:
+
+    s<><(set $_ to "v36"; \9^<sHe^S[>)>^
+    s<><(something that eventually evaluates to '$')>^
+    s<><(something that eventually evaluates to 'y')>eeee^
+    s<><(something that eventually evaluates to 'a')>eeee^
+    s<><s>^
+    s<><(something that eventually evaluates to "$_")>eeee
+
+This is an issue, because `s<><>e`
+completely overrides the value of `$_`. For example, after `s<><$_ = 1; 2>e`,
+the value of `$_` is 2. This means that we can’t 
+
+Phew, that was quite the journey. It’d be really interesting to see someone
+come up with a set of 5 characters that makes things simpler.
+
+EDIT: by using a slightly different approach, we can avoid hitting the length
+limit on `<>`. Fully functional brainfuck interpreter using only `<>^es`: [Try
+it
+online!](https://tio.run/##7VvNbtswDL77LXb2vNtuBF/EiG4CNqDYhrLvn5GUbKuJI9GJCsSKXSdW9MsffRRFuf/8@9vP85kAAQgAnfPgkDw/CPn23gE57xDRgSdOek@eU544g2/ymoNeyiUllwtf3JmmJB@n1HLRVDNe7jrlkidqghA9AP9wazQjyU3zJ0c@t@HbzZ8MJ5GV5S/DFH36uZ2/Na4AlZ/IDa5yg6B8RC7cGhfOFal/hGrnhAihgknx@iSWvNNKS5VYQR58SbEw4pZKBZ0W5HCh1bxELvWak42ni9/3S@lRETQyrZWrsjLLCiworSIIIxI5UQZjRCQniqCckOnK4KTqpqXESYn6LMUVZwrdjYGtONhoCO5bxohlx5zO3zjnuiXT3a6VaXW76q11frkLkNRFf7nz8JxEG@/S2iNGJnzf7RtYxLc@wZaZVYJEOqsK8EhnVB4qXwUbi4k1GNmc7ojqGloFuwHfZUgXVjSiqhSbjBJYTJEzLMaV5b1z54KJEfhzIgtvK7SNsLZBuu4qaIeHGSQ2qNQFzAZ/3u7MWxfwCr4skweIsfNAgDjziPvew7WlKJRZf8PnKYEoODeF@EYBOL4eZC5ctHJgZnHQijGaZdHJMDNbgJpc4eyjGLARPZUyQpL9VIafT658RR2ZwmZoiZ0V/IDKftf1PmDLPItTzT7bpgnnNuwJHlmCXOAFSYMv4i/EQAwXSwwGp/qvtUFogauKqt2rM0LKr1dWkzjizYKXF9mrRPcaWl7ze57sPue22A87mpgR7@PZhLjOcWsDSgnmjiYMQYNyrKAE@S/xc5rypFs0YPuIYD64mqaqyyMpVVwWUKnazEo7QgY11NnQeUo2Wjw5F7Z48eRgmCLG8@w1xIyp5oaoed215rYfrxAcrxBsm/u7PwLa5Ylue3anVY4Ky7nl3NdM/1O9Z7iz6L1LeAxMKrMbZXDEAY84f6tx/u1R8a2H@rszGYnhpFXD@VLv05tt1@yG2wyY2/Q6KVUyZTJXEQ@/8fmPmVqbeY3ste78z4wGQyrHgc5zHOg8f1hlu@CtUreI/CF5Pxzl39kbhDt4r149mHDirD0rccH2Lq9yevV1cFKc/m8HqkM/OSg4NfP@fO7H7/04jNhjDzCccIQeh1OP2MdrhCFenA/DCCPX4mKuyFUljxuDPKDvsYslQ1IinZ6AG3FLABhHLQkjypBcHHpaGbQLo4YSGSFcmimdSB9CvHY9ky89gnZ62bCTUq0LU7XAT0gPkmKKAUKzZcDQ6IrsDhNpRaqv5TRcyWlFgCqm7kJO64JiHpMrN1SXGWsZCiDtj7uQsftUBIF/0a92sSIcJuEEU7MrZfVc@GMMouJxlTf@6769//34@PX7/cP7P/8B
+"Perl 5 – Try It Online"). Automated Perl to `<>^es` transpiler:
+[pastebin](https://pastebin.com/escABn3m).
