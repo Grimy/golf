@@ -1,6 +1,17 @@
-/s/ until@c=(@b=(++$n,bottle.$&,of,beer),on,the,wall),s/^/Take one down and pass it around, @c.
+s''@n=(@c=(++$q,bottle."s"x@-,of,beer),on,the,wall),s//\utake one down and pass it around, @n.
 
-@c, @b.
-/,/, 99.*
+@n, @c.
+/until/..99.*
++/;print"$\'\ugo to the store and buy some more$&"';
 
-/;print$'."Go to the store and buy some more$&"
+$_ = uc;
+$_ ^= j x length;
+$\=$/;
+
+die if /[{}\n |~]/;
+
+$_ = unpack 'B*', $_ ^ '`' x length;
+s/..(.{6})/$1/g;
+$_ = pack 'B*', $_;
+$_ = qq{eval lc(j x 165^pack'65534'^C,'$_')};
+

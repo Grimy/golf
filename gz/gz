@@ -1,8 +1,10 @@
 #!/usr/bin/perl -s
-use feature say;
-use Golf::Utils;
+
+use feature qw(say);
 use List::Util qw(shuffle);
 use List::MoreUtils qw(zip);
+
+do '../Utils.pm';
 
 local $/;
 sub don't(&) { }
@@ -41,7 +43,7 @@ say length, " chars, packed into...";
 # DAFT #
 ########
 
-if ($find) {
+=doc
 for(;;) {
 	$max = -2;
 	undef $best;
@@ -64,28 +66,25 @@ for(;;) {
 	s/\Q$best/chr @rep/ge;# for $_, @rep;
 	push @rep, $best;
 }
-die;
-}
+=cut
 
 @rep = qw#
 	map{  }0..  vec$:
 	shift  $_  }  {
 	@_  print/‰.*`‚/sg  chr:
 	$-  $;  ;&_;sub'
-    +=2**
+	+=2**
 #;
 
 shuffle:
-{ @rep = shuffle(@rep); redo if $rep[5] ne '$_' or "@rep" =~ /}.*}0|{.*map{/ or grep { ($rep[$_] ^ chr($xor ? 79 ^ $_ : 90 - $_)) =~ /\s/ } 0..$#rep; }
+{ @rep = shuffle(@rep); redo if $rep[5] ne '$_' or "@rep" =~ /}.*}0|{.*map\{/ or grep { ($rep[$_] ^ chr($xor ? 79 ^ $_ : 90 - $_)) =~ /\s/ } 0..$#rep; }
 
 while (($i, $best) = each @rep) {
-	$l = length $best;
 	$chr = chr($xor ? 79 ^ $i : 90 - $i);
 	say "$chr $best: ", s/\Q$best/$chr/g;
 	$code{$best} = $chr;
-
 	die $i if $chr !~ /[A-Z]/;
-    $rep[$i] ^= $chr;
+	$rep[$i] ^= $chr;
 }
 say "\n", 8*length("@rep") + 6*length, ' bits (', length, '+', length "@rep", ')';
 $sub = $code{";&_;sub'"} or die;

@@ -1,11 +1,8 @@
 #!/usr/bin/perl -s
-use feature say;
+
+use feature qw(say);
+no warnings qw(qw);
 local $/;
-sub don't(&) { }
-
-`taskkill /F /IM perl5.8.exe`;
-
-# Reverse c (use pop)
 
 ########
 # INIT #
@@ -23,7 +20,7 @@ say length, " chars, packed into...";
 # DAFT #
 ########
 
-if ($find) {
+=cut
 for(;;) {
 	$max = -5;
 	undef $best;
@@ -48,25 +45,25 @@ for(;;) {
 	push @rep, $best;
 }
 die;
-}
+=cut
 
 @rep = qw#
-	@_  $:  $-
+	@_  $: ; $-
 	map{  $_  }0..
 	;sub'  shift
 	print/‰.*`‚/sg  vec$T,$/++,1
-	{  chr  }
+	{ } chr
 #;
 
-$i=-1;
+$i = -1;
 while ($best = $rep[++$i]) {
-	$l = length $best;
+	my $l = length $best;
 	$chr = chr($i)^O;
 	#say $best=~s/\pC/'{'.ord($&).'}'/reg, ": ",
-	say "$best: ", s/\Q$best/$chr/g;# * 6 * ($l-1) - 8 * ($l+1);
-	die $i if $chr !~ /[A-Z]/;
+	say "$best: ", s/\Q$best/$chr/g; # * 6 * ($l-1) - 8 * ($l+1);
+	die $chr if $chr !~ /[A-O]/;
 	$rep[$i] ^= $chr;
-	die if $rep[$i] =~ /\s/;
+	die "($rep[$i])" if $rep[$i] =~ /\s/;
 }
 say "\n", 8*length("@rep") + 6*length, ' bits (', length, '+', length "@rep", ')';
 
@@ -75,16 +72,12 @@ say "\n", 8*length("@rep") + 6*length, ' bits (', length, '+', length "@rep", ')
 ########
 
 $_ = uc;
-s/[\\\d]+$/\$</ if $cheat;
-$_ .= '#' if y===c%4;
+# s/[\\\d]+$/\$</ if $cheat;
+$_ .= '#' if y===c % 4;
 die if /[a-z{}\n |~]/;
 
 # Home-made unpack u
-$_ = unpack 'B*', $_ ^ '`' x length;
-s/..(.{6})/$1/g;
-say;
-s/0+$//; # Might save a byte
-$_ = pack 'B*', $_;
+$_ = unpack 'u', $_;
 say length . " bytes of packed data";
 
 # Pick a delimiter, ' if possible
@@ -96,9 +89,7 @@ while (/\Q$close/) {
 }
 
 # Embed
-#$pack = $cheat ? '$<^C' : ' u999';
-$pack = ' u78';
-$_ = "\$_=pack$pack,$open$_$close;"
+$_ = "\$_=pack u,$open$_$close;"
    . "sµ.µqw#@rep#"
    . '[79^ord$&]^$&µeg;'
    . "eval";
@@ -116,15 +107,14 @@ print OUT;
 open OUT, '>gztest';
 binmode OUT;
 print OUT s/eval/print/r;
-say `perl5.8 gztest`;
+say `perl gztest`;
 
 for (qw(rfc1952.txt rfc1951.txt logo.png)) {
 	print;
 	open IN, $_;
-	say ': ', (`perl5.8 gzok < $_.gz` eq <IN>) ? 'OK!' : 'Fail';
+	say ': ', (`perl gzok < $_.gz` eq <IN>) ? 'OK!' : 'Fail';
 }
-length>389?
-printf "It needs to be about %.1f%% shorter.\n", (1-389/length)*100:
-say 'Bwahaha world record :D :D :D';
-say time-$time, " seconds.";
-
+length > 389 ?
+        printf "It needs to be about %.1f%% shorter.\n", (1-389/length)*100 :
+        say 'Bwahaha world record :D :D :D';
+say time - $time, " seconds.";
